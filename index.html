@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio 91 | Cinematic Wedding Experience</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- CRITICAL FIXES: Video, Visibility, and Gallery -->
+    <style>
+        /* 1. HERO VIDEO FIXES */
+        #hero {
+            background: #000;
+        }
+        #bg-video {
+            z-index: 0 !important;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%; min-height: 100%;
+            object-fit: cover;
+        }
+        .video-overlay { z-index: 1 !important; }
+        .particle-layer { z-index: 1 !important; }
+        .hero-content { z-index: 2 !important; }
+
+        /* 2. FONT RESTORED (Removed Gradient Overrides) */
+        /* Falling back to style.css for the original "STUDIO 91" look */
+
+        /* 3. SIGNATURE FIXED: ORANGE & BELOW IMAGE */
+        .signature {
+            position: relative !important; /* Not absolute anymore */
+            z-index: 5 !important;
+            color: #FF5E00 !important; /* NEON ORANGE */
+            font-family: 'Syne', sans-serif !important;
+            font-size: 2.5rem !important;
+            text-align: center;
+            margin-top: 15px;
+            text-shadow: none !important;
+            opacity: 1 !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* 4. VISUAL DIARY TEXT VISIBILITY FIX */
+        .big-stroke-text {
+            -webkit-text-stroke: 2px #FF5E00 !important; /* Neon Orange Outline */
+            color: transparent;
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 5px rgba(255, 94, 0, 0.3));
+        }
+
+        /* 5. MODERN "ONE BY ONE" GALLERY (Cinematic Film Strip) */
+        .marquee-wrapper { display: none !important; } 
+        
+        .gallery-snap-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 40px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            perspective: 1000px; /* 3D Perspective */
+            scroll-behavior: smooth; /* Smooth auto-scroll */
+        }
+        .gallery-snap-container::-webkit-scrollbar { display: none; }
+
+        .gallery-snap-container .img-card {
+            flex: 0 0 80vw; /* Mobile: Full width card */
+            scroll-snap-align: center;
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            filter: brightness(0.8); /* Dim by default */
+            transform: scale(0.95);
+        }
+        
+        .gallery-snap-container .img-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        /* Hover / Focus Effect */
+        .gallery-snap-container .img-card:hover {
+            filter: brightness(1.1);
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 50px rgba(255, 94, 0, 0.4); /* Orange Glow */
+            z-index: 10;
+        }
+
+        .gallery-snap-container .img-card:hover img {
+            transform: scale(1.15); /* Slow Zoom inside */
+        }
+
+        @media(min-width: 768px) {
+            .gallery-snap-container .img-card {
+                flex: 0 0 500px; /* Desktop: Cinematic Width */
+            }
+        }
+
+        /* 6. TOUCH GLOW EFFECT */
+        .touch-glow {
+            transition: text-shadow 0.2s, filter 0.2s;
+        }
+        .touch-glow:active {
+            text-shadow: 0 0 20px #FF5E00, 0 0 40px #FF5E00;
+            filter: drop-shadow(0 0 10px #FF5E00);
+            transform: scale(0.98);
+        }
+
+        /* 7. ARTIST SECTION RESPONSIVE FIX */
+        @media (max-width: 768px) {
+            /* Force stacking on mobile */
+            .split-layout {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+            
+            /* Center align content on mobile */
+            .owner-image-wrapper, .owner-details {
+                text-align: center;
+            }
+            
+            /* Ensure stats are centered */
+            .stats-row {
+                justify-content: center;
+            }
+            
+            /* Add some padding for better mobile spacing */
+            .owner-details {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body class="loading">
+
+    <!-- 1. PRELOADER -->
+    <div id="preloader">
+        <div class="loader-content">
+            <h1 class="loader-title">STUDIO 91</h1>
+            <div class="loader-line-mask">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. FLOATING SIDEBAR -->
+    <aside class="social-sidebar">
+        <div class="line-top"></div>
+        <div class="social-icons-vertical">
+            <a href="https://www.instagram.com/studio91_ganesh?igsh=MWp4dGxjOHgza3Jndg==" target="_blank" class="touch-glow"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/Studio91Weddings/" target="_blank" class="touch-glow"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="touch-glow"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+        <div class="sidebar-text">FOLLOW US</div>
+    </aside>
+
+    <!-- 3. NAVIGATION -->
+    <nav id="main-nav">
+        <div class="nav-container">
+            <a href="#hero" class="logo-mini touch-glow">S91</a>
+            <ul class="menu-list">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#gallery">Visual Diary</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#packages">Pricing</a></li>
+                <li><a href="#owner">The Artist</a></li>
+                <li><a href="#contact" class="btn-highlight touch-glow">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 4. HERO SECTION -->
+    <section id="hero">
+        <div class="video-overlay"></div>
+        <div class="particle-layer"></div>
+
+        <video autoplay muted loop playsinline id="bg-video" poster="assets/img.jpg">
+            <source src="assets/wedding_video.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-content" data-speed="0.5">
+            <h1 class="main-title">STUDIO <span class="outline-text glow-effect touch-glow" style="cursor: pointer;">91</span></h1>
+            <p class="tagline">MAKING MEMORIES TANGIBLE</p>
+            
+            <div class="hero-badges">
+                <span class="badge float-anim-1 touch-glow">#CandidPhotography</span>
+                <span class="badge float-anim-2 touch-glow">#CinematicWedding</span>
+                <span class="badge float-anim-3 touch-glow">#DroneShots</span>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SERVICES BENTO GRID -->
+    <section id="services" class="section-padding">
+        <div class="container">
+            <h2 class="section-title reveal-text">OUR <span class="highlight-orange">EXPERTISE</span></h2>
+            
+            <div class="bento-grid">
+                <div class="bento-box large-box reveal-up touch-glow">
+                    <div class="bento-icon"><i class="fa-solid fa-camera-retro"></i></div>
+                    <h3>Candid Photography</h3>
+                    <p>Capturing the raw, unscripted moments of your special day with artistic flair.</p>
+                </div>
+
+                <div class="bento-box tall-box reveal-up touch-glow" style="transition-delay: 0.1s;">
+                    <div class="bento-icon"><i class="fa-solid fa-film"></i></div>
+                    <h3>Cinematography</h3>
+                    <p>4K Wedding Films that feel like cinema.</p>
+                </div>
+
+                <div class="bento-box reveal-up touch-glow" style="transition-delay: 0.2s;">
+                    <div class="bento-icon"><i class="fa-solid fa-child-reaching"></i></div>
+                    <h3>Baby Shoot</h3>
+                </div>
+                <div class="bento-box reveal-up touch-glow" style="transition-delay: 0.3s;">
+                    <div class="bento-icon"><i class="fa-solid fa-plane-up"></i></div>
+                    <h3>Drone / Helicam</h3>
+                </div>
+
+                <div class="bento-box wide-box reveal-up touch-glow" style="transition-delay: 0.4s;">
+                    <div class="bento-icon"><i class="fa-solid fa-tv"></i></div>
+                    <h3>LED Wall & Live Relay</h3>
+                    <p>Broadcast your wedding live to the audience with crystal clear quality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. VISUAL DIARY (New Modern Scroll) -->
+    <section id="gallery">
+        <div class="gallery-header">
+            <h2 class="big-stroke-text">VISUAL DIARY</h2>
+        </div>
+
+        <!-- Replaced Marquee with Scroll Snap Container -->
+        <div class="gallery-snap-container" id="autoGallery">
+            <div class="img-card touch-glow"><img src="assets/img.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img1.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img2.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img3.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img4.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img5.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+            <div class="img-card touch-glow"><img src="assets/img.jpg" alt="Wedding Moment"><div class="overlay"></div></div>
+        </div>
+    </section>
+
+    <!-- 7. PACKAGES -->
+    <section id="packages" class="section-padding">
+        <div class="container">
+            <h2 class="section-title reveal-text">THE RING <span class="highlight-orange">PACKS</span></h2>
+
+            <div class="pricing-container">
+                <div class="price-card reveal-up touch-glow">
+                    <div class="glow-border"></div>
+                    <div class="card-content">
+                        <h3>GOLD PACK</h3>
+                        <p class="price">₹1,20,000</p>
+                        <ul class="features-list">
+                            <li><i class="fa-solid fa-check"></i> Candid Photo & Video (1)</li>
+                            <li><i class="fa-solid fa-check"></i> Traditional Photo & Video (1)</li>
+                            <li><i class="fa-solid fa-check"></i> Helicam (1 Session)</li>
+                            <li><i class="fa-solid fa-check"></i> Live Relay TV (2)</li>
+                            <li><i class="fa-solid fa-check"></i> Song Video & 12×36 Album</li>
+                        </ul>
+                        <button class="btn-book"><span>Book Gold</span></button>
+                    </div>
+                </div>
+
+                <div class="price-card featured reveal-up touch-glow" style="transition-delay: 0.2s;">
+                    <div class="glow-border"></div>
+                    <div class="badge-featured">RECOMMENDED</div>
+                    <div class="card-content">
+                        <h3>DIAMOND PACK</h3>
+                        <p class="price">₹1,60,000</p>
+                        <ul class="features-list">
+                            <li><i class="fa-solid fa-check"></i> <strong>Everything in Gold +</strong></li>
+                            <li><i class="fa-solid fa-check"></i> Helicam (2 Sessions)</li>
+                            <li><i class="fa-solid fa-check"></i> 2 Main Albums + Mini Album</li>
+                            <li><i class="fa-solid fa-check"></i> Documentary Film Shoot</li>
+                            <li><i class="fa-solid fa-check"></i> 25 Soft Copy Edits</li>
+                        </ul>
+                        <button class="btn-book btn-fill"><span>Book Diamond</span></button>
+                    </div>
+                </div>
+
+                <div class="price-card reveal-up touch-glow" style="transition-delay: 0.4s;">
+                    <div class="glow-border"></div>
+                    <div class="card-content">
+                        <h3>PLATINUM PACK</h3>
+                        <p class="price">₹3,00,000</p>
+                        <ul class="features-list">
+                            <li><i class="fa-solid fa-check"></i> <strong>Everything in Diamond +</strong></li>
+                            <li><i class="fa-solid fa-check"></i> LED Wall Display</li>
+                            <li><i class="fa-solid fa-check"></i> 2 Candid Videographers</li>
+                            <li><i class="fa-solid fa-check"></i> Video Digital Invite</li>
+                            <li><i class="fa-solid fa-check"></i> Pre & Post Wedding Shoots</li>
+                        </ul>
+                        <button class="btn-book"><span>Book Platinum</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. THE ARTIST -->
+    <section id="owner" class="section-padding">
+        <div class="floating-shape shape-1"></div>
+        <div class="container split-layout">
+            <!-- Left Side: Image + Signature -->
+            <div class="owner-image-wrapper reveal-right">
+                <img src="assets/owner.jpg" alt="Ganesh MGS" class="owner-photo">
+                <div class="signature">Ganesh MGS</div>
+            </div>
+            
+            <!-- Right Side: Details -->
+            <div class="owner-details reveal-left">
+                <h2>MEET THE <span class="highlight-orange">ARTIST</span></h2>
+                <div class="role-badge">LEAD PHOTOGRAPHER</div>
+                <p class="bio">
+                    "We don't just take photographs; we freeze time." 
+                    <br><br>
+                    At Studio 91, every click is a deliberate attempt to turn your fleeting moments into tangible art. With years of experience and a cinematic eye, we ensure your story is told beautifully.
+                </p>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <span class="num">500+</span>
+                        <span class="label">Weddings</span>
+                    </div>
+                    <div class="stat">
+                        <span class="num">10+</span>
+                        <span class="label">Years Exp</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. TESTIMONIALS -->
+    <section id="testimonials" class="section-padding">
+        <div class="container">
+            <h2 class="section-title center-text">CLIENT <span class="highlight-orange">LOVE</span></h2>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-card touch-glow">
+                    <div class="stars">★★★★★</div>
+                    <p>"The best decision we made for our wedding. The cinematic video was like a movie!"</p>
+                    <h4>- Priya & Rahul</h4>
+                </div>
+                <div class="testimonial-card touch-glow">
+                    <div class="stars">★★★★★</div>
+                    <p>"Ganesh and his team are magicians. The candid shots were breathtaking."</p>
+                    <h4>- Karthik & Meera</h4>
+                </div>
+                <div class="testimonial-card touch-glow">
+                    <div class="stars">★★★★★</div>
+                    <p>"Professional, creative, and extremely patient. Highly recommended!"</p>
+                    <h4>- The Swaminathans</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FOOTER -->
+    <footer id="contact">
+        <div class="footer-bg-text">STUDIO 91</div>
+        <div class="footer-content">
+
+            <div class="footer-col">
+                <h3>STUDIO 91</h3>
+                <p>Capturing Memories since 2015.</p>
+                <div class="social-links-footer">
+                    <a href="https://www.instagram.com/studio91_ganesh?igsh=MWp4dGxjOHgza3Jndg==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/Studio91Weddings/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>LOCATION</h4>
+                <p>149, Kasukudal Street,<br>Chidambaram, Tamil Nadu</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>CONTACT</h4>
+                <p class="highlight-orange">88708 42827</p>
+                <p>studio91cdm@gmail.com</p>
+            </div>
+
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Studio 91. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 11. STICKY RIBBON -->
+    <div id="sticky-ribbon">
+        <span>BOOK YOUR DATES FOR 2025 NOW!</span>
+        <button class="btn-ribbon touch-glow" onclick="document.querySelector('#contact').scrollIntoView({behavior: 'smooth'})">ENQUIRE</button>
+        <div class="close-ribbon"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- AUTO SCROLL SCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.getElementById('autoGallery');
+            let scrollAmount = 0;
+            const cardWidth = gallery.querySelector('.img-card').offsetWidth + 30; // Card width + gap
+
+            setInterval(() => {
+                if (gallery.scrollLeft + gallery.clientWidth >= gallery.scrollWidth - 50) {
+                    gallery.scrollTo({ left: 0, behavior: 'smooth' }); // Loop back to start
+                } else {
+                    gallery.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                }
+            }, 2500); // Moves every 2.5 seconds
+        });
+    </script>
+</body>
+</html>
